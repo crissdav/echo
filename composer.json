@@ -1,0 +1,22 @@
+{
+    "name": "crissdav/echo",
+    "description": "Echo — red social de fotos desplegada en AWS (EC2 + RDS + S3). Computación en la Nube, FIIS-UNAS.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "ext-pdo": "*",
+        "ext-gd": "*",
+        "ext-mbstring": "*",
+        "aws/aws-sdk-php": "^3.300"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
