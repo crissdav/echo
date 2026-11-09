@@ -125,7 +125,7 @@ CREATE TABLE notifications (
   actor_id   INT UNSIGNED NOT NULL,                -- quien hizo la acción
   type       ENUM('like','comment','follow') NOT NULL,
   post_id    INT UNSIGNED NULL,
-  is_read    TINYINT(1) NOT NULL DEFAULT 0,
+  is_read    TINYINT NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY idx_notif_user (user_id, is_read, created_at),
   CONSTRAINT fk_notif_user  FOREIGN KEY (user_id)  REFERENCES users(id) ON DELETE CASCADE,
