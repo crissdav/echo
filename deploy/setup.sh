@@ -10,7 +10,6 @@ set -euo pipefail
 
 REPO="${1:-https://github.com/crissdav/echo.git}"
 APP_DIR="/var/www/echo"
-PHP_VER="8.3"
 
 step() { echo -e "\n\033[1;35m==> $*\033[0m"; }
 
@@ -21,12 +20,15 @@ if ! swapon --show | grep -q /swapfile; then
   echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab >/dev/null
 fi
 
-step "2/8 Paquetes: Apache, PHP $PHP_VER, extensiones, Git, Composer y cliente MySQL"
+step "2/8 Paquetes: Apache, PHP, extensiones, Git, Composer y cliente MySQL"
 sudo apt-get update -y
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   apache2 php libapache2-mod-php php-mysql php-gd php-mbstring php-xml php-curl php-zip \
   unzip git composer mysql-client
 sudo a2enmod rewrite headers expires >/dev/null
+# Versión de PHP que instaló la distribución (8.3 en Ubuntu 24.04; otra en versiones nuevas)
+PHP_VER="$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')"
+echo "   PHP $PHP_VER"
 
 step "3/8 Código desde GitHub → $APP_DIR"
 if [ -d "$APP_DIR/.git" ]; then
