@@ -382,11 +382,27 @@ Comparte la URL `https://dxxxx.cloudfront.net`.
 
 ### Actualizar la aplicación
 
+Flujo: cambias el código en tu PC → `git commit` → `git push` → en la EC2:
+
 ```bash
 cd /var/www/echo
-sudo git pull
-composer install --no-dev --optimize-autoloader --no-interaction   # si cambió composer.json
+git pull                                                           # sin sudo: los archivos siguen siendo de ubuntu
+composer install --no-dev --optimize-autoloader --no-interaction   # solo si cambió composer.json
 ```
+
+Los cambios en PHP, vistas, CSS y JS se ven al instante: no hace falta reiniciar Apache ni invalidar
+CloudFront (usa *CachingDisabled* y los assets llevan `?v=` con la fecha del archivo). El `.env` no
+está en Git, así que `git pull` nunca lo toca.
+
+### Actualizaciones de seguridad de Ubuntu
+
+```bash
+sudo apt update && sudo apt upgrade -y
+# si al final aparece "*** System restart required ***":
+sudo reboot     # la conexión SSH se corta; en ~1 min la app vuelve sola (Apache arranca con el sistema)
+```
+
+No uses `do-release-upgrade`: cambia de versión de Ubuntu (y de PHP).
 
 Si el cambio trae un archivo en `database/migrations/`, ejecútalo una vez como `admin`
 (no borra datos):
