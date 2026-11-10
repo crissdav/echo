@@ -26,7 +26,7 @@ $icons = ['like' => 'heart-fill', 'comment' => 'chat-fill', 'follow' => 'person-
           <?php if ($n['type'] === 'follow'): ?>
             <?= View::partial('partials/follow_button', ['userId' => $n['actor_id'], 'following' => (bool) $n['is_following'], 'size' => 'btn-follow-sm']) ?>
           <?php elseif ($n['thumb_key']): ?>
-            <a href="/p/<?= (int) $n['post_id'] ?>"><img class="notif-thumb" src="<?= e(Storage::url($n['thumb_key'])) ?>" alt="" loading="lazy"></a>
+            <a href="/p/<?= (int) $n['post_id'] ?>" class="js-open-post"><img class="notif-thumb" src="<?= e(Storage::url($n['thumb_key'])) ?>" alt="" loading="lazy"></a>
           <?php endif; ?>
         </div>
       <?php endforeach; ?>

@@ -63,10 +63,12 @@ $nav = [
   <header class="topbar">
     <a href="/" class="brand"><?php require BASE_PATH . '/app/Views/partials/logo.php'; ?><span class="wordmark">3CH0</span></a>
     <div class="d-flex gap-3 align-items-center">
-      <a href="/status" class="top-icon" aria-label="Estado del sistema"><i class="bi bi-cloud-check"></i></a>
       <a href="/notifications" class="top-icon" aria-label="Notificaciones">
         <i class="bi bi-heart"></i><?php if ($unread): ?><span class="dot-badge"><?= $unread > 9 ? '9+' : $unread ?></span><?php endif; ?>
       </a>
+      <button class="top-icon border-0 bg-transparent p-0" data-bs-toggle="offcanvas" data-bs-target="#moreSheet" aria-controls="moreSheet" aria-label="Más opciones">
+        <i class="bi bi-list"></i>
+      </button>
     </div>
   </header>
 
@@ -86,6 +88,46 @@ $nav = [
     <?php endforeach; ?>
     <?php if ($me): ?><a href="/u/<?= e($me['username']) ?>" aria-label="Perfil"><?= avatar($me, 26) ?></a><?php endif; ?>
   </nav>
+</div>
+
+<!-- Menú "Más" en móvil (hoja inferior) -->
+<div class="offcanvas offcanvas-bottom sheet" tabindex="-1" id="moreSheet" aria-label="Más opciones">
+  <div class="sheet-handle" aria-hidden="true"></div>
+  <nav class="pb-2">
+    <a class="sheet-link" href="/explore"><i class="bi bi-search"></i>Explorar</a>
+    <a class="sheet-link" href="/status"><i class="bi bi-cloud-check"></i>Estado del sistema</a>
+    <a class="sheet-link" href="/settings"><i class="bi bi-gear"></i>Configuración</a>
+    <form method="post" action="/logout" class="m-0"><?= csrf_field() ?>
+      <button class="sheet-link danger"><i class="bi bi-box-arrow-right"></i>Cerrar sesión</button>
+    </form>
+  </nav>
+</div>
+
+<!-- Publicación en modal (se rellena por JS desde /p/{id}) -->
+<div class="modal fade post-modal" id="postModal" tabindex="-1" aria-label="Publicación" aria-hidden="true">
+  <button type="button" class="modal-close-float d-none d-md-grid" data-bs-dismiss="modal" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
+    <div class="modal-content">
+      <div class="modal-header d-md-none">
+        <button type="button" class="icon-btn" data-bs-dismiss="modal" aria-label="Volver"><i class="bi bi-arrow-left"></i></button>
+        <h2 class="modal-title ms-2">Publicación</h2>
+      </div>
+      <div class="modal-body js-post-modal-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Seguidores / seguidos en modal -->
+<div class="modal fade list-modal" id="listModal" tabindex="-1" aria-labelledby="listModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="listModalTitle">Conexiones</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body js-list-modal-body"></div>
+    </div>
+  </div>
 </div>
 
 <div class="toast-zone" aria-live="polite"></div>

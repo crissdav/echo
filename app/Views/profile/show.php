@@ -19,8 +19,8 @@ $p = $profile;
       </div>
       <ul class="profile-stats">
         <li><strong><?= short_number((int) $p['posts_count']) ?></strong> publicaciones</li>
-        <li><a href="/u/<?= e($p['username']) ?>/followers"><strong class="js-followers-count"><?= short_number((int) $p['followers_count']) ?></strong> seguidores</a></li>
-        <li><a href="/u/<?= e($p['username']) ?>/following"><strong><?= short_number((int) $p['following_count']) ?></strong> seguidos</a></li>
+        <li><a href="/u/<?= e($p['username']) ?>/followers" class="js-open-list"><strong class="js-followers-count"><?= short_number((int) $p['followers_count']) ?></strong> seguidores</a></li>
+        <li><a href="/u/<?= e($p['username']) ?>/following" class="js-open-list"><strong><?= short_number((int) $p['following_count']) ?></strong> seguidos</a></li>
       </ul>
       <div class="profile-bio">
         <strong><?= e($p['full_name']) ?></strong>

@@ -22,7 +22,7 @@ $likes = (int) $post['likes_count'];
           <?php if ($post['location']): ?><div class="loc"><?= e($post['location']) ?></div><?php endif; ?>
         </div>
         <?php if ($mine): ?>
-          <form method="post" action="/p/<?= (int) $post['id'] ?>/delete" class="ms-auto js-confirm" data-confirm="¿Eliminar esta publicación? No se puede deshacer.">
+          <form method="post" action="/p/<?= (int) $post['id'] ?>/delete" class="ms-auto js-confirm" data-confirm-title="¿Eliminar publicación?" data-confirm="Se borrará la foto y todos sus comentarios. No se puede deshacer." data-confirm-ok="Eliminar">
             <?= csrf_field() ?><button class="icon-btn text-danger" aria-label="Eliminar"><i class="bi bi-trash3"></i></button>
           </form>
         <?php endif; ?>

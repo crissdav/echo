@@ -18,6 +18,10 @@ $ok = fn (bool $b) => $b ? '<span class="state ok"><i class="bi bi-check-circle-
   <!-- Diagrama de flujo simple -->
   <div class="arch">
     <div class="arch-node"><i class="bi bi-phone"></i><span>Usuario</span><small>Navegador</small></div>
+    <?php if (behind_cloudfront()): ?>
+      <div class="arch-arrow"><span>HTTPS</span></div>
+      <div class="arch-node cdn"><i class="bi bi-globe2"></i><span>CloudFront</span><small>CDN · certificado TLS</small></div>
+    <?php endif; ?>
     <div class="arch-arrow"><span>HTTP :80</span></div>
     <div class="arch-node primary"><i class="bi bi-hdd-rack"></i><span>Amazon EC2</span><small>Apache + PHP <?= e(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION) ?></small></div>
     <div class="arch-split">

@@ -26,7 +26,7 @@ $comments = (int) $post['comments_count'];
         <?php if ($mine): ?>
           <li><hr class="dropdown-divider"></li>
           <li>
-            <form method="post" action="/p/<?= (int) $post['id'] ?>/delete" class="js-confirm" data-confirm="¿Eliminar esta publicación? No se puede deshacer.">
+            <form method="post" action="/p/<?= (int) $post['id'] ?>/delete" class="js-confirm" data-confirm-title="¿Eliminar publicación?" data-confirm="Se borrará la foto y todos sus comentarios. No se puede deshacer." data-confirm-ok="Eliminar">
               <?= csrf_field() ?><button class="dropdown-item rounded-3 text-danger"><i class="bi bi-trash3 me-2"></i>Eliminar</button>
             </form>
           </li>
@@ -44,7 +44,7 @@ $comments = (int) $post['comments_count'];
     <button class="icon-btn js-like <?= $post['liked'] ? 'liked' : '' ?>" aria-label="Me gusta">
       <i class="bi <?= $post['liked'] ? 'bi-heart-fill' : 'bi-heart' ?>"></i>
     </button>
-    <a class="icon-btn" href="/p/<?= (int) $post['id'] ?>" aria-label="Comentar"><i class="bi bi-chat"></i></a>
+    <a class="icon-btn js-open-post" href="/p/<?= (int) $post['id'] ?>" aria-label="Comentar"><i class="bi bi-chat"></i></a>
     <button class="icon-btn js-share" data-url="/p/<?= (int) $post['id'] ?>" aria-label="Compartir"><i class="bi bi-send"></i></button>
   </div>
 
@@ -57,7 +57,7 @@ $comments = (int) $post['comments_count'];
       </div>
     <?php endif; ?>
     <?php if ($comments > 2): ?>
-      <a href="/p/<?= (int) $post['id'] ?>" class="view-all">Ver los <?= $comments ?> comentarios</a>
+      <a href="/p/<?= (int) $post['id'] ?>" class="view-all js-open-post">Ver los <?= $comments ?> comentarios</a>
     <?php endif; ?>
     <div class="comment-preview js-comments">
       <?php foreach ($post['preview_comments'] ?? [] as $c): ?>

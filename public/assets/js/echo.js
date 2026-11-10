@@ -34,6 +34,103 @@
 
   const fmt = (n) => (n >= 10000 ? (n / 1000).toFixed(1).replace('.0', '').replace('.', ',') + ' mil' : n.toLocaleString('es-PE'));
 
+  // ---------------------------------------------------------------- Diálogo de confirmación
+  /**
+   * Reemplaza a confirm() con un <dialog> nativo (top layer: queda por encima
+   * incluso de los modales de Bootstrap). Devuelve una promesa con true/false.
+   */
+  function confirmDialog({ title = '¿Estás seguro?', text = '', ok = 'Aceptar', danger = true } = {}) {
+    return new Promise((resolve) => {
+      const dlg = document.createElement('dialog');
+      dlg.className = 'echo-dialog';
+      dlg.innerHTML =
+        '<form method="dialog">' +
+        '<div class="echo-dialog-head"><h2 class="echo-dialog-title"></h2><p class="echo-dialog-text"></p></div>' +
+        '<button value="ok" class="echo-dialog-btn js-ok"></button>' +
+        '<button value="cancel" class="echo-dialog-btn js-cancel">Cancelar</button>' +
+        '</form>';
+      $('.echo-dialog-title', dlg).textContent = title;
+      $('.echo-dialog-text', dlg).textContent = text;
+      const okBtn = $('.js-ok', dlg);
+      okBtn.textContent = ok;
+      okBtn.classList.toggle('danger', danger);
+      // Dentro del modal abierto (si hay) para no pelear con su trampa de foco
+      ($('.modal.show') || document.body).appendChild(dlg);
+      dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close('cancel'); }); // clic en el fondo
+      // Esc cierra solo el diálogo: sin esto, Bootstrap también cerraría el modal que está debajo
+      dlg.addEventListener('keydown', (e) => { if (e.key === 'Escape') e.stopPropagation(); });
+      dlg.addEventListener('close', () => { resolve(dlg.returnValue === 'ok'); dlg.remove(); });
+      dlg.showModal();
+      $('.js-cancel', dlg).focus();
+    });
+  }
+
+  // ---------------------------------------------------------------- Modales de contenido
+  /** Descarga una página del propio sitio y devuelve, por cada selector, el elemento encontrado. */
+  async function fetchFragments(url, ...selectors) {
+    const res = await fetch(url, { headers: { Accept: 'text/html' }, credentials: 'same-origin' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+    return selectors.map((sel) => {
+      const el = doc.querySelector(sel);
+      if (!el) throw new Error('Fragmento no encontrado: ' + sel);
+      return document.importNode(el, true);
+    });
+  }
+
+  const loadingHtml = '<div class="modal-loading"><div class="spinner"></div></div>';
+
+  // Publicación en modal: la URL cambia a /p/{id} y el botón "atrás" lo cierra.
+  const postModalEl = $('#postModal');
+  const postModalBody = $('.js-post-modal-body');
+  let postModalPushed = false;
+
+  async function openPost(href) {
+    const modal = bootstrap.Modal.getOrCreateInstance(postModalEl);
+    postModalBody.innerHTML = loadingHtml;
+    modal.show();
+    if (postModalPushed) history.replaceState({ echoModal: true }, '', href);
+    else { history.pushState({ echoModal: true }, '', href); postModalPushed = true; }
+    try {
+      postModalBody.replaceChildren(...(await fetchFragments(href, '.post-detail')));
+    } catch {
+      location.href = href; // sesión vencida, publicación borrada, etc.: navegación normal
+    }
+  }
+
+  if (postModalEl) {
+    postModalEl.addEventListener('hidden.bs.modal', () => {
+      postModalBody.innerHTML = '';
+      if (postModalPushed) { postModalPushed = false; history.back(); }
+    });
+    window.addEventListener('popstate', () => {
+      if (!postModalPushed) return;
+      postModalPushed = false; // el usuario ya volvió: no hacer otro history.back()
+      bootstrap.Modal.getInstance(postModalEl)?.hide();
+    });
+  }
+
+  // Seguidores / seguidos en modal (con pestañas que cargan dentro del mismo modal)
+  const listModalEl = $('#listModal');
+  async function openList(href) {
+    const body = $('.js-list-modal-body', listModalEl);
+    $('#listModalTitle').textContent = /\/following$/.test(href) ? 'Seguidos' : 'Seguidores';
+    body.innerHTML = loadingHtml;
+    // Si se pulsó una pestaña del propio modal, ese enlace acaba de desaparecer: el foco vuelve al modal
+    if (listModalEl.contains(document.activeElement) || document.activeElement === document.body) listModalEl.focus();
+    bootstrap.Modal.getOrCreateInstance(listModalEl).show();
+    try {
+      body.replaceChildren(...(await fetchFragments(href, '.seg-tabs', '.card-list')));
+      // El enlace pulsado ya no existe: devolver el foco al modal para que Esc y Tab sigan funcionando
+      ($('.seg-tabs a.active', body) || listModalEl).focus();
+    } catch {
+      location.href = href;
+    }
+  }
+
+  /** Clic "normal" (sin Ctrl/Cmd/Shift ni botón central): esos abren en pestaña nueva como siempre. */
+  const plainClick = (ev) => ev.button === 0 && !ev.metaKey && !ev.ctrlKey && !ev.shiftKey && !ev.altKey;
+
   // ---------------------------------------------------------------- Me gusta
   async function toggleLike(post, forceLike = false) {
     const btn = $('.js-like', post);
@@ -49,9 +146,13 @@
     btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
     try {
       const r = await api('/api/like/' + post.dataset.postId);
-      btn.classList.toggle('liked', r.liked);
-      icon.className = 'bi ' + (r.liked ? 'bi-heart-fill' : 'bi-heart');
-      if (counter) counter.textContent = fmt(r.count);
+      // La misma publicación puede estar dos veces en pantalla (tarjeta del feed + modal)
+      document.querySelectorAll(`.post[data-post-id="${post.dataset.postId}"]`).forEach((p) => {
+        const b = $('.js-like', p);
+        if (b) { b.classList.toggle('liked', r.liked); $('i', b).className = 'bi ' + (r.liked ? 'bi-heart-fill' : 'bi-heart'); }
+        const c = $('.js-like-count', p);
+        if (c) c.textContent = fmt(r.count);
+      });
     } catch (e) {
       btn.classList.toggle('liked', wasLiked);
       icon.className = 'bi ' + (wasLiked ? 'bi-heart-fill' : 'bi-heart');
@@ -84,6 +185,22 @@
 
   // ---------------------------------------------------------------- Clics delegados
   document.addEventListener('click', async (ev) => {
+    // Publicación en modal: miniaturas de la cuadrícula, "comentar", "ver comentarios", notificaciones
+    const postLink = ev.target.closest('.tile, .js-open-post');
+    if (postLink && postModalEl && plainClick(ev)) {
+      ev.preventDefault();
+      openPost(postLink.getAttribute('href'));
+      return;
+    }
+
+    // Seguidores / seguidos: desde el perfil o desde las pestañas dentro del propio modal
+    const listLink = ev.target.closest('.js-open-list, #listModal .seg-tabs a');
+    if (listLink && listModalEl && plainClick(ev)) {
+      ev.preventDefault();
+      openList(listLink.getAttribute('href'));
+      return;
+    }
+
     const like = ev.target.closest('.js-like');
     if (like) { toggleLike(like.closest('.post')); return; }
 
@@ -116,7 +233,8 @@
 
     const del = ev.target.closest('.js-del-comment');
     if (del) {
-      if (!confirm('¿Eliminar este comentario?')) return;
+      const okDel = await confirmDialog({ title: '¿Eliminar comentario?', text: 'El comentario se borrará para todos.', ok: 'Eliminar' });
+      if (!okDel) return;
       try {
         await api(`/api/comment/${del.dataset.id}/delete`);
         del.closest('.comment')?.remove();
@@ -128,7 +246,8 @@
     const clamp = ev.target.closest('.js-clamp');
     if (clamp && !ev.target.closest('a')) { clamp.classList.remove('clamp'); return; }
 
-    if (ev.target.closest('.js-focus-comment')) { $('.js-comment-form input')?.focus(); return; }
+    const focusBtn = ev.target.closest('.js-focus-comment');
+    if (focusBtn) { $('.js-comment-form input', focusBtn.closest('.post'))?.focus(); return; }
 
     const pw = ev.target.closest('.js-pw-toggle');
     if (pw) {
@@ -140,9 +259,16 @@
   });
 
   // Confirmaciones de formularios (eliminar publicación)
-  document.addEventListener('submit', (ev) => {
+  document.addEventListener('submit', async (ev) => {
     const f = ev.target.closest('.js-confirm');
-    if (f && !confirm(f.dataset.confirm)) ev.preventDefault();
+    if (!f) return;
+    ev.preventDefault();
+    const ok = await confirmDialog({
+      title: f.dataset.confirmTitle || '¿Estás seguro?',
+      text: f.dataset.confirm || '',
+      ok: f.dataset.confirmOk || 'Aceptar',
+    });
+    if (ok) HTMLFormElement.prototype.submit.call(f); // submit() no vuelve a disparar este evento
   });
 
   // ---------------------------------------------------------------- Comentarios
