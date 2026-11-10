@@ -14,6 +14,7 @@ USE echo;
 SET FOREIGN_KEY_CHECKS = 0;
 DROP VIEW  IF EXISTS v_estadisticas;
 DROP VIEW  IF EXISTS v_ranking_publicaciones;
+DROP TABLE IF EXISTS login_attempts;
 DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS post_hashtags;
 DROP TABLE IF EXISTS hashtags;
@@ -131,6 +132,19 @@ CREATE TABLE notifications (
   CONSTRAINT fk_notif_user  FOREIGN KEY (user_id)  REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT fk_notif_actor FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT fk_notif_post  FOREIGN KEY (post_id)  REFERENCES posts(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ------------------------------------------------------------
+-- Intentos fallidos de inicio de sesión (límite contra fuerza bruta)
+-- login_key = 'u:<id>' si la cuenta existe, o 'x:<lo escrito>' si no.
+-- ------------------------------------------------------------
+CREATE TABLE login_attempts (
+  id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ip           VARCHAR(45)  NOT NULL,              -- IPv4 o IPv6
+  login_key    VARCHAR(120) NOT NULL,
+  attempted_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_attempts_key (login_key, attempted_at),
+  KEY idx_attempts_ip  (ip, attempted_at)
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------

@@ -23,6 +23,42 @@ function asset(string $path): string
     return '/assets/' . $path . '?v=' . $v;
 }
 
+/**
+ * ¿Las cabeceras de CloudFront son confiables?
+ * Solo si TRUST_CLOUDFRONT=true, es decir, si el grupo de seguridad de la EC2
+ * únicamente acepta tráfico de CloudFront (lista de prefijos administrada).
+ * Si la EC2 fuera accesible directamente, cualquiera podría falsificarlas.
+ */
+function behind_cloudfront(): bool
+{
+    return env('TRUST_CLOUDFRONT', 'false') === 'true';
+}
+
+/** ¿El visitante llegó por HTTPS? (directo, o a través de CloudFront) */
+function is_https(): bool
+{
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        return true;
+    }
+    return behind_cloudfront() && ($_SERVER['HTTP_CLOUDFRONT_FORWARDED_PROTO'] ?? '') === 'https';
+}
+
+/**
+ * IP real del visitante. Detrás de CloudFront, REMOTE_ADDR es la IP de un nodo
+ * de CloudFront; la del usuario llega en "CloudFront-Viewer-Address: ip:puerto".
+ */
+function client_ip(): string
+{
+    $remote = (string) ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+    $viewer = (string) ($_SERVER['HTTP_CLOUDFRONT_VIEWER_ADDRESS'] ?? '');
+    if (!behind_cloudfront() || $viewer === '') {
+        return $remote;
+    }
+    $pos = strrpos($viewer, ':');                       // quita el ":puerto" final
+    $ip = trim($pos === false ? $viewer : substr($viewer, 0, $pos), '[]');
+    return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : $remote;
+}
+
 function csrf_field(): string
 {
     return '<input type="hidden" name="_csrf" value="' . e(Csrf::token()) . '">';

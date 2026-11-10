@@ -31,10 +31,11 @@ usar #hashtags y @menciones, y recibir notificaciones.
 | Archivos | Amazon S3 (bucket privado) + AWS SDK for PHP v3 + rol IAM de la instancia |
 | Frontend | HTML5, Bootstrap 5, Bootstrap Icons y JavaScript nativo (fetch, IntersectionObserver) |
 | Red | VPC propia, grupos de seguridad encadenados e IP elástica |
+| Entrega / HTTPS | Amazon CloudFront delante de la EC2 (certificado de AWS en `*.cloudfront.net`) |
 
 ## Funcionalidades
 
-- Registro e inicio de sesión (bcrypt, regeneración de sesión y bloqueo tras 5 intentos fallidos).
+- Registro e inicio de sesión (bcrypt, regeneración de sesión y límite de intentos fallidos guardado en RDS, por cuenta y por IP).
 - Feed de las cuentas que sigues, con **scroll infinito** y paginación por cursor.
 - Publicar fotos: validación del tipo real, corrección de la orientación EXIF, recorte, versión de 1080 px y miniatura, eliminación de metadatos GPS y subida a S3.
 - **Me gusta** con botón o con **doble toque** (animación de corazón) y actualización optimista.
@@ -46,6 +47,8 @@ usar #hashtags y @menciones, y recibir notificaciones.
 
 ## Seguridad aplicada
 
+- Todo el tráfico de los usuarios va por **HTTPS** gracias a CloudFront. La EC2 solo acepta HTTP desde la lista de prefijos de CloudFront, así que no se puede saltar el CDN entrando por la IP.
+- Límite de intentos de login guardado en RDS: 5 fallos en 15 min bloquean la cuenta 5 min, y 20 fallos desde una IP la bloquean 15 min. Se usa la IP real del usuario (`CloudFront-Viewer-Address`).
 - La BD **no es pública**: RDS vive en subredes privadas y su grupo de seguridad solo acepta el puerto 3306 desde el grupo de seguridad de la EC2.
 - La aplicación usa el usuario `echo_app`, con privilegios mínimos (`SELECT, INSERT, UPDATE, DELETE`) y `REQUIRE SSL`.
 - La conexión a RDS va **cifrada con TLS** (certificado oficial de AWS).
@@ -63,13 +66,14 @@ echo/
 ├── app/
 │   ├── Controllers/   Auth, Feed, Post, Social (AJAX), Profile, Explore, Notification, System
 │   ├── Core/          Env, Database (PDO+TLS), Router, Auth, Csrf, View, Storage (S3), Image (GD)
-│   ├── Models/        User, Post, Social
+│   ├── Models/        User, Post, Social, LoginThrottle
 │   ├── Views/         layouts, partials y páginas
 │   ├── bootstrap.php
 │   └── helpers.php
 ├── database/
-│   ├── schema.sql        8 tablas + 2 vistas
+│   ├── schema.sql        9 tablas + 2 vistas
 │   ├── usuario_app.sql   usuario con privilegios mínimos
+│   ├── migrations/       cambios para una base ya creada (no borran datos)
 │   └── seed.php          datos de demostración (12 usuarios, 24 fotos)
 ├── deploy/
 │   ├── setup.sh          instalación automática en Ubuntu 24.04
@@ -97,16 +101,19 @@ echo/
    CA=/etc/ssl/certs/rds-global-bundle.pem
    mysql -h <endpoint-rds> -u admin -p --ssl-ca=$CA < database/schema.sql
    mysql -h <endpoint-rds> -u admin -p --ssl-ca=$CA < database/usuario_app.sql
-   php database/seed.php
+   php database/seed.php TuClaveSegura   # una sola vez; se niega si ya hay usuarios reales
    ```
-4. Abre `http://<ip-elastica>` e inicia sesión con **crissdav / Echo2026!**
+4. Crea la distribución de CloudFront delante de la EC2 (HTTPS sin dominio propio) y restringe
+   el grupo de seguridad a la lista de prefijos de CloudFront.
+5. Abre `https://<id>.cloudfront.net`, regístrate o entra con una cuenta demo y la clave del paso 3.
 
 ## Ejecutar en local (opcional)
 
 Necesitas PHP 8.1 o superior con las extensiones `pdo_mysql`, `gd` y `mbstring`, y MySQL o MariaDB.
 
 ```bash
-cp .env.example .env    # STORAGE_DRIVER=local, DB_SSL_CA vacío, DB_* de tu MySQL local
+cp .env.example .env    # APP_ENV=local, STORAGE_DRIVER=local, TRUST_CLOUDFRONT=false,
+                        # SHOW_DEMO_LOGIN=true, DB_SSL_CA vacío, DB_* de tu MySQL local
 mysql -u root -p < database/schema.sql
 php database/seed.php
 php -S localhost:8000 -t public public/index.php

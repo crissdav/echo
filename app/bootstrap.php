@@ -34,15 +34,14 @@ ini_set('display_errors', $debug ? '1' : '0');
 ini_set('log_errors', '1');
 error_reporting(E_ALL);
 
-// Sesión con cookies seguras (HttpOnly, SameSite, Secure si hay HTTPS).
+// Sesión con cookies seguras (HttpOnly, SameSite, Secure si hay HTTPS,
+// incluido el HTTPS que termina en CloudFront).
 if (PHP_SAPI !== 'cli' && session_status() === PHP_SESSION_NONE) {
-    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
     session_name('echo_sid');
     session_set_cookie_params([
         'lifetime' => 0,
         'path'     => '/',
-        'secure'   => $https,
+        'secure'   => is_https(),
         'httponly' => true,
         'samesite' => 'Lax',
     ]);

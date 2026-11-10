@@ -5,13 +5,11 @@ namespace App\Controllers;
 
 use App\Core\Auth;
 use App\Core\View;
+use App\Models\LoginThrottle;
 use App\Models\User;
 
 final class AuthController
 {
-    private const MAX_ATTEMPTS = 5;
-    private const LOCK_SECONDS = 60;
-
     public function showLogin(): void
     {
         if (Auth::check()) {
@@ -26,25 +24,24 @@ final class AuthController
         $password = (string) ($_POST['password'] ?? '');
         remember_input(['login' => $login]);
 
-        // Bloqueo temporal tras varios intentos fallidos (fuerza bruta).
-        $lock = $_SESSION['login_lock_until'] ?? 0;
-        if ($lock > time()) {
-            flash('error', 'Demasiados intentos. Espera ' . ($lock - time()) . ' segundos.');
+        $user = $login !== '' ? User::findByLogin($login) : null;
+        $ip = client_ip();
+        $key = LoginThrottle::key($user, $login);
+
+        // Bloqueo temporal tras varios intentos fallidos (fuerza bruta), por cuenta y por IP.
+        $wait = LoginThrottle::secondsLeft($ip, $key);
+        if ($wait > 0) {
+            flash('error', 'Demasiados intentos. Espera ' . self::humanWait($wait) . ' y vuelve a intentarlo.');
             redirect('/login');
         }
 
-        $user = $login !== '' ? User::findByLogin($login) : null;
         if (!$user || !password_verify($password, $user['password_hash'])) {
-            $_SESSION['login_attempts'] = ($_SESSION['login_attempts'] ?? 0) + 1;
-            if ($_SESSION['login_attempts'] >= self::MAX_ATTEMPTS) {
-                $_SESSION['login_lock_until'] = time() + self::LOCK_SECONDS;
-                $_SESSION['login_attempts'] = 0;
-            }
+            LoginThrottle::fail($ip, $key);
             flash('error', 'Usuario o contraseña incorrectos.');
             redirect('/login');
         }
 
-        unset($_SESSION['login_attempts'], $_SESSION['login_lock_until']);
+        LoginThrottle::clear($key);
         forget_input();
         Auth::login((int) $user['id']);
         redirect('/');
@@ -102,5 +99,14 @@ final class AuthController
     {
         Auth::logout();
         redirect('/login');
+    }
+
+    private static function humanWait(int $seconds): string
+    {
+        if ($seconds < 60) {
+            return $seconds . ' segundos';
+        }
+        $min = (int) ceil($seconds / 60);
+        return $min . ($min === 1 ? ' minuto' : ' minutos');
     }
 }

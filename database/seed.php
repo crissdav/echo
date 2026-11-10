@@ -6,10 +6,12 @@
  * subidas a S3), likes, comentarios y notificaciones, para que el feed no esté vacío.
  *
  * Uso (desde la carpeta del proyecto):
- *     php database/seed.php                 # contraseña demo: Echo2026!
- *     php database/seed.php MiClaveSegura   # contraseña personalizada
+ *     php database/seed.php                 # contraseña demo: Echo2026! (solo fuera de producción)
+ *     php database/seed.php MiClaveSegura   # contraseña personalizada (obligatoria en producción)
+ *     php database/seed.php MiClave --force # borra también usuarios reales (¡cuidado!)
  *
- * ¡OJO! Borra todos los datos existentes antes de insertar.
+ * ¡OJO! Borra todos los datos existentes antes de insertar. Por eso se niega a
+ * ejecutarse si hay usuarios reales (correo distinto de @echo.demo), salvo con --force.
  */
 declare(strict_types=1);
 
@@ -24,7 +26,32 @@ use App\Core\Image;
 use App\Core\Storage;
 
 mt_srand(2026); // datos reproducibles
-$password = $argv[1] ?? 'Echo2026!';
+
+$args = array_slice($argv, 1);
+$force = in_array('--force', $args, true);
+$args = array_values(array_filter($args, fn ($a) => $a !== '--force'));
+$production = env('APP_ENV', 'production') === 'production';
+
+$password = $args[0] ?? null;
+if ($password === null) {
+    if ($production) {
+        exit("\n  ✗ En producción indica una contraseña propia para las cuentas demo:\n"
+           . "      php database/seed.php TuClaveSegura\n"
+           . "    (la contraseña por defecto está publicada en el repositorio)\n\n");
+    }
+    $password = 'Echo2026!';
+}
+if (strlen($password) < 8 || !preg_match('/\d/', $password) || !preg_match('/[A-Za-z]/', $password)) {
+    exit("\n  ✗ La contraseña debe tener al menos 8 caracteres, con letras y números.\n\n");
+}
+
+$realUsers = (int) DB::value("SELECT COUNT(*) FROM users WHERE email NOT LIKE '%@echo.demo'");
+if ($realUsers > 0 && !$force) {
+    exit("\n  ✗ Hay $realUsers usuario(s) real(es) en la base de datos.\n"
+       . "    Este script BORRA TODO (usuarios, publicaciones y fotos en S3).\n"
+       . "    Si de verdad quieres hacerlo: php database/seed.php TuClave --force\n\n");
+}
+
 $start = microtime(true);
 
 echo "\n  ECHO · cargando datos de demostración\n";
