@@ -46,8 +46,11 @@
       dlg.innerHTML =
         '<form method="dialog">' +
         '<div class="echo-dialog-head"><h2 class="echo-dialog-title"></h2><p class="echo-dialog-text"></p></div>' +
-        '<button value="ok" class="echo-dialog-btn js-ok"></button>' +
+        // Alerta de dos acciones al estilo iOS: Cancelar a la izquierda, la acción a la derecha
+        '<div class="echo-dialog-actions">' +
         '<button value="cancel" class="echo-dialog-btn js-cancel">Cancelar</button>' +
+        '<button value="ok" class="echo-dialog-btn js-ok"></button>' +
+        '</div>' +
         '</form>';
       $('.echo-dialog-title', dlg).textContent = title;
       $('.echo-dialog-text', dlg).textContent = text;

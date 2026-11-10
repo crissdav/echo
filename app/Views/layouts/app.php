@@ -63,9 +63,6 @@ $nav = [
   <header class="topbar">
     <a href="/" class="brand"><?php require BASE_PATH . '/app/Views/partials/logo.php'; ?><span class="wordmark">3CH0</span></a>
     <div class="d-flex gap-3 align-items-center">
-      <a href="/notifications" class="top-icon" aria-label="Notificaciones">
-        <i class="bi bi-heart"></i><?php if ($unread): ?><span class="dot-badge"><?= $unread > 9 ? '9+' : $unread ?></span><?php endif; ?>
-      </a>
       <button class="top-icon border-0 bg-transparent p-0" data-bs-toggle="offcanvas" data-bs-target="#moreSheet" aria-controls="moreSheet" aria-label="Más opciones">
         <i class="bi bi-list"></i>
       </button>
@@ -82,18 +79,28 @@ $nav = [
   </main>
 
   <!-- Navegación inferior (móvil) -->
-  <nav class="bottomnav">
-    <?php foreach ($nav as [$href, $icon, $iconOn, $label]): $on = active($href); if ($href === '/notifications') continue; ?>
-      <a href="<?= $href ?>" class="<?= $on ?>" aria-label="<?= $label ?>"><i class="bi bi-<?= $on ? $iconOn : $icon ?>"></i></a>
+  <nav class="bottomnav" aria-label="Navegación principal">
+    <?php foreach ($nav as [$href, $icon, $iconOn, $label]): $on = active($href); ?>
+      <a href="<?= $href ?>" class="tab <?= $on ?>" <?= $on ? 'aria-current="page"' : '' ?>>
+        <span class="tab-icon">
+          <i class="bi bi-<?= $on ? $iconOn : $icon ?>"></i>
+          <?php if ($href === '/notifications' && $unread): ?><span class="dot-badge"><?= $unread > 9 ? '9+' : $unread ?></span><?php endif; ?>
+        </span>
+        <span class="tab-label"><?= $href === '/notifications' ? 'Actividad' : $label ?></span>
+      </a>
     <?php endforeach; ?>
-    <?php if ($me): ?><a href="/u/<?= e($me['username']) ?>" aria-label="Perfil"><?= avatar($me, 26) ?></a><?php endif; ?>
+    <?php if ($me): $on = active('/u/' . $me['username']); ?>
+      <a href="/u/<?= e($me['username']) ?>" class="tab <?= $on ?>" <?= $on ? 'aria-current="page"' : '' ?>>
+        <span class="tab-icon"><?= avatar($me, 26) ?></span><span class="tab-label">Perfil</span>
+      </a>
+    <?php endif; ?>
   </nav>
 </div>
 
 <!-- Menú "Más" en móvil (hoja inferior) -->
 <div class="offcanvas offcanvas-bottom sheet" tabindex="-1" id="moreSheet" aria-label="Más opciones">
   <div class="sheet-handle" aria-hidden="true"></div>
-  <nav class="pb-2">
+  <nav class="sheet-group">
     <a class="sheet-link" href="/explore"><i class="bi bi-search"></i>Explorar</a>
     <a class="sheet-link" href="/status"><i class="bi bi-cloud-check"></i>Estado del sistema</a>
     <a class="sheet-link" href="/settings"><i class="bi bi-gear"></i>Configuración</a>
@@ -108,9 +115,9 @@ $nav = [
   <button type="button" class="modal-close-float d-none d-md-grid" data-bs-dismiss="modal" aria-label="Cerrar"><i class="bi bi-x-lg"></i></button>
   <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
     <div class="modal-content">
-      <div class="modal-header d-md-none">
-        <button type="button" class="icon-btn" data-bs-dismiss="modal" aria-label="Volver"><i class="bi bi-arrow-left"></i></button>
-        <h2 class="modal-title ms-2">Publicación</h2>
+      <div class="modal-header ios-navbar d-md-none">
+        <button type="button" class="nav-back" data-bs-dismiss="modal"><i class="bi bi-chevron-left"></i>Atrás</button>
+        <h2 class="modal-title">Publicación</h2>
       </div>
       <div class="modal-body js-post-modal-body"></div>
     </div>
@@ -119,11 +126,11 @@ $nav = [
 
 <!-- Seguidores / seguidos en modal -->
 <div class="modal fade list-modal" id="listModal" tabindex="-1" aria-labelledby="listModalTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header ios-navbar">
         <h2 class="modal-title" id="listModalTitle">Conexiones</h2>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <button type="button" class="nav-done" data-bs-dismiss="modal">Listo</button>
       </div>
       <div class="modal-body js-list-modal-body"></div>
     </div>
