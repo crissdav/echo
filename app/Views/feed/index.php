@@ -25,7 +25,7 @@ $me = Auth::user();
         <p>Sigue a otras cuentas o publica tu primera foto para empezar a hacer eco.</p>
         <div class="d-flex gap-2 justify-content-center">
           <a href="/explore" class="btn btn-echo">Explorar cuentas</a>
-          <a href="/new" class="btn btn-light border">Publicar</a>
+          <a href="/new" class="btn btn-soft">Publicar</a>
         </div>
       </div>
     <?php endif; ?>

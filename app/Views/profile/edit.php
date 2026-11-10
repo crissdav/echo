@@ -35,7 +35,7 @@ $me = Auth::user();
     <div class="text-end muted xsmall mt-1"><span class="js-count"><?= mb_strlen($me['bio'] ?? '') ?></span>/160</div>
 
     <div class="d-flex justify-content-end gap-2 mt-3">
-      <a href="/u/<?= e($me['username']) ?>" class="btn btn-light border">Cancelar</a>
+      <a href="/u/<?= e($me['username']) ?>" class="btn btn-soft">Cancelar</a>
       <button class="btn btn-echo px-4">Guardar</button>
     </div>
   </form>
