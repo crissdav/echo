@@ -17,9 +17,9 @@ usar #hashtags y @menciones, y recibir notificaciones.
                     │  Subred pública                     Subredes privadas (2 AZ)            │
                     │  ┌───────────────────┐   :3306/TLS  ┌──────────────────────────┐        │
                     │  │ EC2 t3.micro      │─────────────▶│ RDS MySQL db.t3.micro    │        │
-                    │  │ Ubuntu 24.04      │  sg-echo-db   │ sin acceso público       │        │
+                    │  │ Ubuntu 24.04      │  echo-db-sg   │ sin acceso público       │        │
                     │  │ Apache + PHP 8.3  │  (solo desde  └──────────────────────────┘        │
-                    │  │ IP elástica       │   sg-echo-web)                                    │
+                    │  │ IP elástica       │   echo-web-sg)                                    │
                     │  └─────────┬─────────┘                                                   │
                     └────────────┼─────────────────────────────────────────────────────────────┘
                                  │ rol IAM (sin access keys)
@@ -97,8 +97,11 @@ Tiempo aproximado: 1 h a 1 h 30 min (RDS y CloudFront tardan en crearse).
 
 **Antes de empezar**
 
-- Una cuenta de AWS con acceso a la consola y, de preferencia, un **presupuesto de costo cero** como alarma:
-  *Billing and Cost Management → Budgets → Create budget → Use a template → Zero spend budget*.
+- Una cuenta de AWS con acceso a la consola y, de preferencia, una **alarma de presupuesto**
+  (*Billing and Cost Management → Budgets → Create budget*):
+  - Cuenta con la capa gratuita clásica: plantilla **Zero spend budget**.
+  - Cuenta del **plan gratuito con créditos**: **Cost budget** mensual (por ejemplo 15 USD) y, en
+    *Advanced options*, **desmarca "Credits"** para que avise por el uso real aunque los créditos lo cubran.
 - El repositorio publicado en GitHub (público), porque la EC2 lo descarga con `git clone`.
 - Trabaja siempre en la misma región: **US East (Ohio) `us-east-2`**, selector arriba a la derecha.
   CloudFront e IAM son globales y no dependen de la región.
@@ -108,8 +111,8 @@ Tiempo aproximado: 1 h a 1 h 30 min (RDS y CloudFront tardan en crearse).
 | Recurso | Nombre |
 |---|---|
 | VPC | `echo-vpc` |
-| Grupo de seguridad de la EC2 | `sg-echo-web` |
-| Grupo de seguridad de la BD | `sg-echo-db` |
+| Grupo de seguridad de la EC2 | `echo-web-sg` |
+| Grupo de seguridad de la BD | `echo-db-sg` |
 | Bucket S3 | `echo-media-crissdav` (debe ser único en todo AWS: usa el tuyo) |
 | Política / rol IAM | `EchoS3Policy` / `EchoEC2Role` |
 | Base de datos RDS | `echo-db` |
@@ -140,18 +143,18 @@ Pulsa **Create VPC**. Resultado: la EC2 irá en una subred **pública** y la RDS
 
 **EC2 → Security Groups → Create security group** (los dos en la VPC `echo-vpc`).
 
-**`sg-echo-web`** (para la EC2)
+**`echo-web-sg`** (para la EC2)
 
 | Tipo | Puerto | Origen | Para qué |
 |---|---|---|---|
 | SSH | 22 | **My IP** | Administrar la instancia solo desde tu PC |
 | HTTP | 80 | `0.0.0.0/0` | **Temporal**: para probar antes de tener CloudFront (se cambia en el paso 11) |
 
-**`sg-echo-db`** (para la RDS)
+**`echo-db-sg`** (para la RDS)
 
 | Tipo | Puerto | Origen | Para qué |
 |---|---|---|---|
-| MySQL/Aurora | 3306 | **`sg-echo-web`** (elige el grupo, no una IP) | Solo la EC2 puede hablar con la BD |
+| MySQL/Aurora | 3306 | **`echo-web-sg`** (elige el grupo, no una IP) | Solo la EC2 puede hablar con la BD |
 
 Deja las reglas de salida (outbound) por defecto. Si tu IP de casa cambia, actualiza la regla SSH con "My IP".
 
@@ -202,7 +205,7 @@ La política solo permite listar, leer, subir y borrar objetos **de ese bucket**
 | Compute resource | Don't connect to an EC2 compute resource |
 | VPC / DB subnet group | `echo-vpc` / `echo-db-subnets` |
 | Public access | **No** |
-| VPC security group | Choose existing → **solo `sg-echo-db`** (quita `default`) |
+| VPC security group | Choose existing → **solo `echo-db-sg`** (quita `default`) |
 | Availability Zone | No preference |
 | Database authentication | Password authentication |
 | Monitoring | Desmarca Performance Insights / Enhanced monitoring (evita costos) |
@@ -223,7 +226,7 @@ Tarda 5 a 10 minutos. Cuando el estado sea **Available**, copia el **Endpoint**
 | Instance type | **t3.micro** |
 | Key pair | Create new key pair → `echo-key`, RSA, formato **.pem** → se descarga; guárdalo bien |
 | Network settings → Edit | VPC `echo-vpc` · Subnet **una pública** (`echo-subnet-public1-…`) · Auto-assign public IP **Enable** |
-| Firewall | Select existing security group → **`sg-echo-web`** |
+| Firewall | Select existing security group → **`echo-web-sg`** |
 | Storage | 20 GiB gp3 |
 | Advanced details → IAM instance profile | **`EchoEC2Role`** |
 | Advanced details → Metadata version | V2 only (token required) — la página `/status` ya usa IMDSv2 |
@@ -249,7 +252,7 @@ icacls echo-key.pem /grant:r "$($env:USERNAME):(R)"
 ssh -i echo-key.pem ubuntu@<IP-ELASTICA>
 ```
 
-Acepta la huella con `yes`. Si no conecta: revisa que la regla SSH de `sg-echo-web` tenga tu IP actual.
+Acepta la huella con `yes`. Si no conecta: revisa que la regla SSH de `echo-web-sg` tenga tu IP actual.
 
 ### Paso 8 · Instalar la aplicación
 
@@ -342,14 +345,14 @@ Cuando el estado pase de *Deploying* a una fecha (unos 5 minutos), copia el **Di
 (`dxxxxxxxxxxxx.cloudfront.net`) y abre `https://dxxxxxxxxxxxx.cloudfront.net`: debe cargar con candado.
 
 **Cerrar la EC2 para que solo CloudFront pueda entrar** (obligatorio):
-**EC2 → Security Groups → `sg-echo-web` → Edit inbound rules**
+**EC2 → Security Groups → `echo-web-sg` → Edit inbound rules**
 
 1. **Elimina** la regla HTTP 80 desde `0.0.0.0/0` (y la de 443 si existe).
 2. **Agrega** HTTP 80 con origen **Prefix list → `com.amazonaws.global.cloudfront.origin-facing`**.
 3. Deja SSH 22 solo desde tu IP.
 
 > Esa lista de prefijos cuenta como ~55 reglas del límite del grupo. Si AWS se queja del límite,
-> deja en `sg-echo-web` solo esa regla y la de SSH.
+> deja en `echo-web-sg` solo esa regla y la de SSH.
 
 Por último, en la EC2:
 
@@ -398,13 +401,13 @@ No vuelvas a ejecutar `schema.sql` en producción: hace `DROP TABLE` y borra tod
 
 | Síntoma | Causa probable y solución |
 |---|---|
-| CloudFront responde **502 / 504** | El *Origin domain* no es el DNS público de la EC2, el protocolo no es *HTTP only*, o `sg-echo-web` no tiene la regla de la lista de prefijos de CloudFront |
+| CloudFront responde **502 / 504** | El *Origin domain* no es el DNS público de la EC2, el protocolo no es *HTTP only*, o `echo-web-sg` no tiene la regla de la lista de prefijos de CloudFront |
 | El login "rebota" a `/login` sin error, o falla el CSRF | Falta la *Origin request policy* `AllViewerAndCloudFrontHeaders-2022-06` (no se reenvían las cookies) o no se permitió POST |
 | "Demasiados intentos" le sale a **todos** | La app está detrás de CloudFront con `TRUST_CLOUDFRONT=false`: cuenta los fallos por la IP de CloudFront, compartida por muchos usuarios. Pon `true` (con el grupo de seguridad cerrado) |
-| Error de conexión a la BD | Endpoint mal copiado, `sg-echo-db` no permite 3306 desde `sg-echo-web`, `DB_PASS` distinta a la de `usuario_app.sql`, o falta `DB_SSL_CA` (el usuario exige TLS) |
+| Error de conexión a la BD | Endpoint mal copiado, `echo-db-sg` no permite 3306 desde `echo-web-sg`, `DB_PASS` distinta a la de `usuario_app.sql`, o falta `DB_SSL_CA` (el usuario exige TLS) |
 | Las fotos no se ven o no se suben | El rol `EchoEC2Role` no está asociado a la instancia, el bucket del `.env` no coincide con el de la política IAM, o la región es otra |
 | SSH: "Permission denied (publickey)" o "bad permissions" | Usuario debe ser `ubuntu`; aplica los `icacls` del paso 7 |
-| SSH se queda esperando | Tu IP cambió: actualiza la regla SSH de `sg-echo-web` con "My IP" |
+| SSH se queda esperando | Tu IP cambió: actualiza la regla SSH de `echo-web-sg` con "My IP" |
 | Errores 500 | Revisa `sudo tail -n 50 /var/log/apache2/error.log` |
 
 ### Costos y limpieza

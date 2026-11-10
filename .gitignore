@@ -7,3 +7,6 @@
 Thumbs.db
 .vscode/
 *.pem
+
+# Credenciales y notas locales (nunca al repositorio)
+*.local.md
