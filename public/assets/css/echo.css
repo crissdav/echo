@@ -159,6 +159,7 @@ code { color: #d8b4fe; background: rgba(168,85,247,.14); padding: 1px 6px; borde
 .flash i { font-size: 18px; line-height: 1.1; }
 .flash-success { background: rgba(16,185,129,.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,.35); }
 .flash-error { background: rgba(239,68,68,.12); color: #fca5a5; border: 1px solid rgba(239,68,68,.35); }
+body.guest code { color: #7e22ce; background: #ede9fe; }
 body.guest .flash-success { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
 body.guest .flash-error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
 @keyframes drop { from { opacity: 0; transform: translateY(-8px); } }
