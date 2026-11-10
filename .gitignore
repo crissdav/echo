@@ -10,3 +10,4 @@ Thumbs.db
 
 # Credenciales y notas locales (nunca al repositorio)
 *.local.md
+/informe/
