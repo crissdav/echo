@@ -408,6 +408,7 @@ No vuelvas a ejecutar `schema.sql` en producción: hace `DROP TABLE` y borra tod
 | Las fotos no se ven o no se suben | El rol `EchoEC2Role` no está asociado a la instancia, el bucket del `.env` no coincide con el de la política IAM, o la región es otra |
 | SSH: "Permission denied (publickey)" o "bad permissions" | Usuario debe ser `ubuntu`; aplica los `icacls` del paso 7 |
 | SSH se queda esperando | Tu IP cambió: actualiza la regla SSH de `echo-web-sg` con "My IP" |
+| "Base de datos no disponible" (503) y `/health` muestra `"env":null` | Apache no puede leer `.env`. Pasa si se editó con `sed -i` u otra herramienta que recrea el archivo: `sudo chown ubuntu:www-data .env && sudo chmod 640 .env`. Edítalo con `nano`, que conserva los permisos |
 | Errores 500 | Revisa `sudo tail -n 50 /var/log/apache2/error.log` |
 
 ### Costos y limpieza
