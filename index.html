@@ -4,13 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#0e1016">
+<meta name="theme-color" content="#EEF0F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#07080E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Echo · Pendientes y finanzas</title>
 <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div id="root"><div class="loader">Cargando…</div></div>
+<div class="wall" aria-hidden="true"><i></i><i></i><i></i></div>
+<div id="root"><div class="loader"><div class="spinner" role="status" aria-label="Cargando"></div></div></div>
 
 <script src="js/config.js"></script>
 <script src="js/app.js" defer></script>
