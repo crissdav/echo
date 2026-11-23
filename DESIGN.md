@@ -1,20 +1,24 @@
 # Design
 
-Mundo visual de Echo. Fijado por el usuario: **modo glass** y **modales al estilo de las apps de Apple**. Superficie: Operate (app de trabajo diario, mobile-first).
+Mundo visual de Echo. Fijado por el usuario: **modo glass**, **modales al estilo de las apps de Apple** y **paleta gris azulado** (ver Color). Superficie: Operate (app de trabajo diario, mobile-first).
 
 ## Escena
 Celular en la mano, a cualquier hora del día: el tema sigue al sistema (claro de día, oscuro de noche).
 
 ## Mundo
-iOS con materiales de vidrio. Un fondo de color difuso ("wallpaper") vive detrás de todo y los paneles son vidrio esmerilado que lo deja ver. El color del fondo cambia según la sección: índigo/rosa/turquesa en Tareas, verde/menta/ámbar en Finanzas, para que el color diga dónde estás.
+iOS con materiales de vidrio. Un fondo de color difuso ("wallpaper") vive detrás de todo y los paneles son vidrio esmerilado que lo deja ver. Las manchas del fondo se reordenan entre Tareas y Finanzas dentro de la misma escala gris azulado.
 
 ## Tipografía
 Pila del sistema de Apple (`-apple-system`, SF Pro); en Windows/Android cae a la fuente del sistema. Escala: título grande 34/700, título de hoja 17/600, cuerpo 17/400, secundario 15, nota 13. Números siempre tabulares.
 
 ## Color
-- Tinte de la app: índigo iOS `#5856D6` (oscuro `#5E5CE6`).
-- Estados con colores del sistema iOS: hecha verde `#34C759`, atrasada rojo `#FF3B30`, postergada naranja `#FF9500`, ingreso verde, gasto rojo, ahorro índigo, retiro naranja.
-- Categorías: ícono SVG en cuadro redondeado de color, como en Ajustes de iOS.
+Paleta elegida por el usuario, una escala de gris azulado:
+`#2e4957 · #375261 · #415c6b · #4a6675 · #54707f · #688391 · #87a1ab · #a7bfc7 · #c8dfe2 · #eaffff`
+- Tinte: `#2e4957` en claro (texto `#eaffff` encima), `#a7bfc7` en oscuro (texto `#16262e` encima).
+- Fondos: claro `#dcecee` con manchas `#87a1ab / #c8dfe2 / #a7bfc7`; oscuro `#15232b` con `#2e4957 / #4a6675 / #375261`. Finanzas reordena las manchas de la misma escala.
+- Vidrio teñido de la paleta (`rgba(234,255,255,.55)` claro, `rgba(46,73,87,.5)` oscuro).
+- Íconos de categoría: cuadros en tonos de la escala (oscuros con ícono claro en tema claro; claros con ícono oscuro en tema oscuro).
+- Los colores de estado conservan significado: hecha/ingreso verde, atrasada/gasto destructivo rojo, postergada y prioridad media naranja.
 
 ## Materiales
 - Vidrio: `backdrop-filter: blur(28px) saturate(180%)`, relleno translúcido, borde de 0.5px con brillo superior y sombra suave con desplazamiento.

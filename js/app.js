@@ -54,28 +54,28 @@ const I = {
   wallet:sv('<path d="M3 7a2 2 0 012-2h13v4"/><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M17 13.5h.01"/>', 2),
 };
 const CATS = {
-  "Comida":        { c:"var(--orange)", d:'<path d="M7 3v8M5 3v5a2 2 0 004 0V3M7 11v10M17 21V3c-2.2 1.2-3.5 3.6-3.5 6.5 0 2.4 1.4 3.5 3.5 3.5"/>' },
-  "Transporte":    { c:"var(--blue)",   d:'<rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 10h14M8 17v3M16 17v3M8.5 13.5h.01M15.5 13.5h.01"/>' },
-  "Universidad":   { c:"var(--indigo)", d:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.4 9 2.4 12 0v-5M22 9v5"/>' },
-  "Servicios":     { c:"var(--yellow)", d:'<path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z"/>' },
-  "Salud":         { c:"var(--pink)",   d:'<path d="M12 20.5s-7.5-4.6-7.5-10.3A4.3 4.3 0 0112 7.6a4.3 4.3 0 017.5 2.6c0 5.7-7.5 10.3-7.5 10.3z"/>' },
-  "Ocio":          { c:"var(--purple)", d:'<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/>' },
-  "Ropa":          { c:"var(--teal)",   d:'<path d="M8.5 3L3 6l2 4.5 2.5-1V21h9V9.5l2.5 1L21 6l-5.5-3c-.7 1.6-2 2.5-3.5 2.5S9.2 4.6 8.5 3z"/>' },
-  "Hogar":         { c:"var(--brown)",  d:'<path d="M3 11l9-7.5 9 7.5"/><path d="M5.5 9.5V20h13V9.5M10 20v-6h4v6"/>' },
-  "Otros":         { c:"var(--gray)",   d:'<path d="M5.5 12h.01M12 12h.01M18.5 12h.01" stroke-width="3.2"/>' },
-  "Mesada":        { c:"var(--green)",  d:'<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/>' },
-  "Trabajo":       { c:"var(--blue)",   d:'<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8.5 7V5a2 2 0 012-2h3a2 2 0 012 2v2M3 13h18"/>' },
-  "Freelance":     { c:"var(--cyan)",   d:'<rect x="4" y="4.5" width="16" height="11" rx="2"/><path d="M2 19.5h20"/>' },
-  "Venta":         { c:"var(--orange)", d:'<path d="M3 12.5V4h8.5L21 13.5 13.5 21z"/><path d="M7.5 8h.01"/>' },
-  "Beca":          { c:"var(--yellow)", d:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 21.5l5-3 5 3-1.5-7.5"/>' },
-  "Ahorro general":{ c:"var(--green)",  d:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>' },
-  "Emergencias":   { c:"var(--red)",    d:'<path d="M12 3l8 3v6c0 4.8-3.4 8-8 9-4.6-1-8-4.2-8-9V6z"/><path d="M12 9v5M9.5 11.5h5"/>' },
-  "Meta personal": { c:"var(--indigo)", d:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>' },
+  "Comida":        { c:"var(--k3)", d:'<path d="M7 3v8M5 3v5a2 2 0 004 0V3M7 11v10M17 21V3c-2.2 1.2-3.5 3.6-3.5 6.5 0 2.4 1.4 3.5 3.5 3.5"/>' },
+  "Transporte":    { c:"var(--k1)",   d:'<rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 10h14M8 17v3M16 17v3M8.5 13.5h.01M15.5 13.5h.01"/>' },
+  "Universidad":   { c:"var(--k2)", d:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.4 9 2.4 12 0v-5M22 9v5"/>' },
+  "Servicios":     { c:"var(--k5)", d:'<path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z"/>' },
+  "Salud":         { c:"var(--k4)",   d:'<path d="M12 20.5s-7.5-4.6-7.5-10.3A4.3 4.3 0 0112 7.6a4.3 4.3 0 017.5 2.6c0 5.7-7.5 10.3-7.5 10.3z"/>' },
+  "Ocio":          { c:"var(--k5)", d:'<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5.5 3.5-5.5 3.5z"/>' },
+  "Ropa":          { c:"var(--k5)",   d:'<path d="M8.5 3L3 6l2 4.5 2.5-1V21h9V9.5l2.5 1L21 6l-5.5-3c-.7 1.6-2 2.5-3.5 2.5S9.2 4.6 8.5 3z"/>' },
+  "Hogar":         { c:"var(--k3)",  d:'<path d="M3 11l9-7.5 9 7.5"/><path d="M5.5 9.5V20h13V9.5M10 20v-6h4v6"/>' },
+  "Otros":         { c:"var(--k5)",   d:'<path d="M5.5 12h.01M12 12h.01M18.5 12h.01" stroke-width="3.2"/>' },
+  "Mesada":        { c:"var(--k2)",  d:'<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/>' },
+  "Trabajo":       { c:"var(--k1)",   d:'<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8.5 7V5a2 2 0 012-2h3a2 2 0 012 2v2M3 13h18"/>' },
+  "Freelance":     { c:"var(--k4)",   d:'<rect x="4" y="4.5" width="16" height="11" rx="2"/><path d="M2 19.5h20"/>' },
+  "Venta":         { c:"var(--k3)", d:'<path d="M3 12.5V4h8.5L21 13.5 13.5 21z"/><path d="M7.5 8h.01"/>' },
+  "Beca":          { c:"var(--k5)", d:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 21.5l5-3 5 3-1.5-7.5"/>' },
+  "Ahorro general":{ c:"var(--k1)",  d:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>' },
+  "Emergencias":   { c:"var(--k3)",    d:'<path d="M12 3l8 3v6c0 4.8-3.4 8-8 9-4.6-1-8-4.2-8-9V6z"/><path d="M12 9v5M9.5 11.5h5"/>' },
+  "Meta personal": { c:"var(--k5)", d:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>' },
 };
 const tile = (cat, lg = false) => { const k = CATS[cat] || CATS.Otros; return `<span class="tile${lg?" lg":""}" style="--tc:${k.c}">${sv(k.d, 2)}</span>`; };
 const iconTile = (svg, color, lg = false) => `<span class="tile${lg?" lg":""}" style="--tc:${color}">${svg}</span>`;
 
-const PRIO = { baja:{t:"Baja",c:"var(--blue)"}, media:{t:"Media",c:"var(--orange)"}, alta:{t:"Alta",c:"var(--red)"} };
+const PRIO = { baja:{t:"Baja",c:"var(--p6)"}, media:{t:"Media",c:"var(--orange)"}, alta:{t:"Alta",c:"var(--red)"} };
 const TYPES = {
   gasto:   { t:"Gasto",   sign:-1, cls:"out",  cats:["Comida","Transporte","Universidad","Servicios","Salud","Ocio","Ropa","Hogar","Otros"] },
   ingreso: { t:"Ingreso", sign: 1, cls:"in",   cats:["Mesada","Trabajo","Freelance","Venta","Beca","Otros"] },
@@ -242,7 +242,7 @@ function confirmAlert({ title, message = "", confirm = "Eliminar", destructive =
 let toastTimer;
 function toast(text, kind = "ok"){
   $(".toast")?.remove(); clearTimeout(toastTimer);
-  const colors = { ok:"var(--green)", info:"var(--tint)", warn:"var(--orange)", err:"var(--red)" };
+  const colors = { ok:"var(--green)", info:"var(--k2)", warn:"var(--orange)", err:"var(--red)" };
   const icons = { ok:I.check, info:I.check, warn:I.redo, err:I.alert };
   const el = document.createElement("div");
   el.className = "toast glass"; el.setAttribute("role","status");
@@ -266,7 +266,7 @@ const UI = {
     $("#root").innerHTML = `
     <main class="auth"><form class="auth-card" id="authForm" novalidate>
       <div class="auth-head">
-        <div class="app-icon">${I.logo.replace('stroke="currentColor"','stroke="#fff"')}</div>
+        <div class="app-icon">${I.logo.replace('stroke="currentColor"','stroke="#eaffff"')}</div>
         <h1>${T[0]}</h1><p>${T[1]}</p>
         ${DEMO ? '<span class="demo-pill">Modo demo · datos solo en este navegador</span>' : ""}
       </div>
@@ -314,7 +314,7 @@ const UI = {
     <div class="shell" id="shell">
       <div class="page">
         <header class="topbar">
-          <div class="brand"><span class="brand-mark">${I.logo.replace('stroke="currentColor"','stroke="#fff"')}</span>Echo</div>
+          <div class="brand"><span class="brand-mark">${I.logo.replace('stroke="currentColor"','stroke="#eaffff"')}</span>Echo</div>
           <button class="avatar glass" id="account" aria-label="Cuenta: ${esc(email)}">${esc((email[0]||"?").toUpperCase())}</button>
         </header>
         <main id="main"></main>
@@ -407,7 +407,7 @@ const UI = {
         hoy:["Nada pendiente para hoy","Puedes adelantar algo de la semana.", I.party, "var(--green)"],
         hechas:["Aún no completas tareas","Toca el círculo de una tarea para marcarla como hecha.", I.check, "var(--green)"],
         postergadas:["Nada postergado","Vas al día con tus tareas.", I.clock, "var(--orange)"]
-      }[filter] || ["Sin tareas aquí","Agrega tu primera tarea con el botón +.", I.doc, "var(--tint)"];
+      }[filter] || ["Sin tareas aquí","Agrega tu primera tarea con el botón +.", I.doc, "var(--k2)"];
       return `<div class="empty glass" style="margin-top:16px"><span class="ico" style="background:${e[3]}">${e[2]}</span><b>${e[0]}</b>${e[1]}</div>`;
     }
     const t = today(), prioN = { alta:0, media:1, baja:2 };
@@ -465,7 +465,7 @@ const UI = {
         <h4 class="group-h">Estado</h4>
         <ul class="group">
           ${st("hecha","Hecha", I.check, "var(--green)")}
-          ${st("pendiente","Pendiente", I.clock, "var(--tint)")}
+          ${st("pendiente","Pendiente", I.clock, "var(--k3)")}
           <li><button class="opt" id="pp-toggle" aria-expanded="false">${iconTile(I.redo, "var(--orange)")}<span>Postergar</span>${x.status==="postergada"?`<span class="tick">${I.check}</span>`:`<span class="sub">${I.chev}</span>`}</button></li>
         </ul>
         <div id="pp" class="hidden">
@@ -591,7 +591,7 @@ const UI = {
                 <span class="cell-main"><span class="l1"><span class="mov-title">${esc(x.note || x.category)}</span><span class="amt num ${T.cls}">${T.sign>0?"+":"−"}${money(x.amount)}</span></span>
                 <span class="l2" style="display:block">${T.t} · ${esc(x.category)}</span></span>
               </button></li>`; }).join("")}</ul>`).join("")
-          : `<h3 class="group-h"><span>Movimientos</span></h3><div class="empty glass"><span class="ico" style="background:var(--tint)">${I.money}</span><b>Sin movimientos</b>Toca + para registrar un gasto, ingreso o ahorro.</div>`}
+          : `<h3 class="group-h"><span>Movimientos</span></h3><div class="empty glass"><span class="ico" style="background:var(--k2)">${I.money}</span><b>Sin movimientos</b>Toca + para registrar un gasto, ingreso o ahorro.</div>`}
         </section>
       </div>`;
     $$("[data-m]").forEach(b => b.onclick = () => {
