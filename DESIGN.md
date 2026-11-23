@@ -21,13 +21,13 @@ Paleta elegida por el usuario, una escala de gris azulado:
 - Los colores de estado conservan significado: hecha/ingreso verde, atrasada/gasto destructivo rojo, postergada y prioridad media naranja.
 
 ## Materiales
-- Vidrio: `backdrop-filter: blur(28px) saturate(180%)`, relleno translúcido, borde de 0.5px y sombra suave neutra. Sin iluminados: ni brillos internos, ni halos de color en botones, ni degradados brillantes (pedido del usuario).
+- Glassmorphism: paneles muy translúcidos (`rgba(255,255,255,.3)` claro, `rgba(234,255,255,.08)` oscuro), `backdrop-filter: blur(22px) saturate(150%)`, borde de 1px claro y sombra suave neutra. Detrás, cinco formas difusas de la paleta (blur 36px) para que el vidrio se note. Sin iluminados: ni brillos internos, ni halos de color en botones, ni degradados brillantes (pedido del usuario).
 - Listas: grupos insertados (inset grouped) con separadores finos, no tarjetas sueltas.
 
 ## Componentes
 - **Hoja (sheet)**: sube desde abajo con curva de resorte de iOS, esquinas de 38px, asa para arrastrar y cerrar, barra con Cancelar / título / acción. Al abrirse, la app de fondo se encoge y oscurece (efecto tarjeta de iOS). En pantallas ≥768px es una hoja centrada.
 - **Alerta**: cuadro centrado de vidrio, título, mensaje y botones en fila; acción destructiva en rojo.
-- **Dock**: barra de pestañas flotante en cápsula de vidrio con botón + circular al lado.
+- **Dock de iOS**: barra de vidrio redondeada abajo con cuatro íconos tipo app (squircles de 60px, sin texto): Tareas, Finanzas, + (nuevo) y Cuenta (inicial del correo). La sección activa lleva un punto debajo, como en el Dock.
 - **Aviso (toast)**: cápsula de vidrio que baja desde arriba.
 - **Control segmentado** de iOS para tipo de movimiento y prioridad.
 

@@ -315,17 +315,15 @@ const UI = {
       <div class="page">
         <header class="topbar">
           <div class="brand"><span class="brand-mark">${I.logo.replace('stroke="currentColor"','stroke="#eaffff"')}</span>Echo</div>
-          <button class="avatar glass" id="account" aria-label="Cuenta: ${esc(email)}">${esc((email[0]||"?").toUpperCase())}</button>
         </header>
         <main id="main"></main>
       </div>
     </div>
-    <nav class="dock" aria-label="Secciones">
-      <div class="tabbar glass" role="tablist">
-        <button class="tab" role="tab" data-view="tareas" aria-selected="${S.view==="tareas"}">${I.tasks}<span>Tareas</span></button>
-        <button class="tab" role="tab" data-view="finanzas" aria-selected="${S.view==="finanzas"}">${I.money}<span>Finanzas</span></button>
-      </div>
-      <button class="add" id="add" aria-label="${S.view==="tareas"?"Nueva tarea":"Nuevo movimiento"} (N)">${I.plus}</button>
+    <nav class="dock glass" aria-label="Dock">
+      <button class="dock-app" data-view="tareas" aria-label="Tareas" ${S.view==="tareas"?'aria-current="page"':""}><span class="sq" style="--sq:var(--p2)">${I.tasks}</span></button>
+      <button class="dock-app" data-view="finanzas" aria-label="Finanzas" ${S.view==="finanzas"?'aria-current="page"':""}><span class="sq" style="--sq:var(--p4)">${I.money}</span></button>
+      <button class="dock-app" id="add" aria-label="${S.view==="tareas"?"Nueva tarea":"Nuevo movimiento"} (N)"><span class="sq" style="--sq:var(--p1)">${I.plus}</span></button>
+      <button class="dock-app" id="account" aria-label="Cuenta: ${esc(email)}"><span class="sq letter" style="--sq:var(--p6)">${esc((email[0]||"?").toUpperCase())}</span></button>
     </nav>`;
     $$("[data-view]").forEach(b => b.onclick = () => {
       if(S.view === b.dataset.view) return;

@@ -22,25 +22,25 @@
   --pink: #FF2D55; --brown: #A2845E; --gray: #8E8E93; --indigo: #5856D6; --mint: #00C7BE;
 
   --label: #16262e;
-  --label-2: rgba(46,73,87,.78);
+  --label-2: rgba(30,52,62,.86);
   --label-3: rgba(46,73,87,.5);
   --separator: rgba(46,73,87,.16);
   --ground: #dcecee;
 
   /* Vidrio */
-  --glass: rgba(234,255,255,.55);
-  --glass-strong: rgba(240,255,255,.82);
-  --glass-edge: rgba(255,255,255,.75);
+  --glass: rgba(255,255,255,.3);
+  --glass-strong: rgba(240,255,255,.62);
+  --glass-edge: rgba(255,255,255,.6);
   --glass-line: rgba(255,255,255,.5);
   --fill: rgba(65,92,107,.1);
   --fill-2: rgba(65,92,107,.18);
   --shadow: 0 8px 28px rgba(46,73,87,.14), 0 1px 2px rgba(46,73,87,.08);
   --shadow-lg: 0 24px 60px rgba(30,52,62,.25), 0 2px 6px rgba(30,52,62,.1);
-  --blur: blur(28px) saturate(180%);
+  --blur: blur(22px) saturate(150%);
   --scrim: rgba(22,38,46,.3);
 
   /* Fondo por sección (Tareas) */
-  --w1: #87a1ab; --w2: #c8dfe2; --w3: #a7bfc7;
+  --w1: #688391; --w2: #c8dfe2; --w3: #4a6675; --w4: #a7bfc7; --w5: #eaffff;
 
   /* Forma y movimiento */
   --r-group: 22px; --r-sheet: 38px; --r-ctl: 12px;
@@ -63,9 +63,9 @@
     --separator: rgba(135,161,171,.24);
     --ground: #15232b;
 
-    --glass: rgba(46,73,87,.5);
-    --glass-strong: rgba(42,66,79,.86);
-    --glass-edge: rgba(200,223,226,.16);
+    --glass: rgba(234,255,255,.08);
+    --glass-strong: rgba(30,50,60,.66);
+    --glass-edge: rgba(234,255,255,.18);
     --glass-line: rgba(234,255,255,.08);
     --fill: rgba(135,161,171,.18);
     --fill-2: rgba(135,161,171,.3);
@@ -73,12 +73,12 @@
     --shadow-lg: 0 28px 70px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.35);
     --scrim: rgba(8,16,20,.5);
 
-    --w1: #2e4957; --w2: #4a6675; --w3: #375261;
+    --w1: #2e4957; --w2: #54707f; --w3: #375261; --w4: #688391; --w5: #415c6b;
   }
 }
-body[data-view="finanzas"]{ --w1:#a7bfc7; --w2:#688391; --w3:#eaffff; }
+body[data-view="finanzas"]{ --w1:#a7bfc7; --w2:#4a6675; --w3:#c8dfe2; --w4:#688391; --w5:#87a1ab; }
 @media (prefers-color-scheme: dark){
-  body[data-view="finanzas"]{ --w1:#415c6b; --w2:#54707f; --w3:#2e4957; }
+  body[data-view="finanzas"]{ --w1:#415c6b; --w2:#2e4957; --w3:#688391; --w4:#375261; --w5:#54707f; }
 }
 
 /* ---------- Base ---------- */
@@ -98,23 +98,25 @@ svg{display:block}
 
 /* ---------- Wallpaper ---------- */
 .wall{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:var(--ground)}
-.wall i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.45;transition:background-color .8s ease}
-.wall i:nth-child(1){width:70vmax;height:70vmax;left:-25vmax;top:-30vmax;background:var(--w1)}
-.wall i:nth-child(2){width:55vmax;height:55vmax;right:-25vmax;top:18vh;background:var(--w2)}
-.wall i:nth-child(3){width:60vmax;height:60vmax;left:-10vmax;bottom:-35vmax;background:var(--w3)}
-@media (prefers-color-scheme: dark){ .wall i{opacity:.4} }
+.wall i{position:absolute;border-radius:50%;filter:blur(36px);opacity:.9;transition:background-color .8s ease}
+.wall i:nth-child(1){width:62vmax;height:62vmax;left:-22vmax;top:-24vmax;background:var(--w1)}
+.wall i:nth-child(2){width:46vmax;height:46vmax;right:-16vmax;top:14vh;background:var(--w2)}
+.wall i:nth-child(3){width:52vmax;height:52vmax;left:-14vmax;bottom:-26vmax;background:var(--w3)}
+.wall i:nth-child(4){width:30vmax;height:30vmax;right:6vw;bottom:8vh;background:var(--w4)}
+.wall i:nth-child(5){width:22vmax;height:22vmax;left:28vw;top:34vh;background:var(--w5)}
+@media (prefers-color-scheme: dark){ .wall i{opacity:.75} }
 
 /* ---------- Material de vidrio ---------- */
 .glass{
   background:var(--glass);
   -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
-  border:.5px solid var(--glass-edge);
+  border:1px solid var(--glass-edge);
   box-shadow:var(--shadow);
 }
 
 /* ---------- Shell ---------- */
 .shell{position:relative;z-index:1;min-height:100dvh;transition:transform var(--dur) var(--ease),filter var(--dur) var(--ease),border-radius var(--dur) var(--ease);transform-origin:50% 0}
-.page{max-width:1040px;margin:0 auto;padding:calc(10px + var(--safe-t)) 16px calc(120px + var(--safe-b))}
+.page{max-width:1040px;margin:0 auto;padding:calc(10px + var(--safe-t)) 16px calc(124px + var(--safe-b))}
 .topbar{display:flex;align-items:center;justify-content:space-between;height:44px}
 .brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:19px;letter-spacing:-.01em}
 .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--p1);border:.5px solid var(--glass-edge);display:grid;place-items:center}
@@ -215,20 +217,20 @@ button.cell:active,.row-main:active{background:var(--fill)}
 .amt.in{color:var(--green)} .amt.out{color:var(--label)} .amt.save{color:var(--tint)} .amt.wd{color:var(--orange)}
 .mov-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ---------- Dock (pestañas flotantes + botón agregar) ---------- */
-.dock{position:fixed;z-index:30;left:0;right:0;bottom:calc(14px + var(--safe-b));display:flex;justify-content:center;align-items:center;gap:10px;pointer-events:none;transition:transform var(--dur) var(--ease),opacity .3s}
-.tabbar{pointer-events:auto;display:flex;gap:2px;padding:5px;border-radius:99px}
-.tab{min-width:112px;height:56px;padding:0 16px;border-radius:99px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:600;color:var(--label-2);transition:background-color .25s,color .25s}
-.tab svg{width:24px;height:24px}
-.tab[aria-selected="true"]{color:var(--tint);background:var(--fill)}
-.add{pointer-events:auto;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;color:var(--on-tint);background:var(--tint);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
-.add:active{transform:scale(.92)}
-.add svg{width:24px;height:24px}
+/* ---------- Dock de iOS ---------- */
+.dock{position:fixed;z-index:30;left:0;right:0;bottom:calc(10px + var(--safe-b));margin:0 auto;width:min(400px,calc(100% - 20px));height:92px;padding:0 16px;border-radius:34px;display:flex;align-items:center;justify-content:space-around;transition:transform var(--dur) var(--ease),opacity .3s}
+.dock-app{position:relative;display:grid;place-items:center;width:64px;height:76px;border-radius:18px;touch-action:manipulation}
+.sq{width:60px;height:60px;border-radius:14px;display:grid;place-items:center;color:#eaffff;background:var(--sq);transition:transform .25s var(--ease),filter .2s;box-shadow:0 4px 10px rgba(22,38,46,.18)}
+.sq svg{width:30px;height:30px}
+.sq.letter{font-size:26px;font-weight:600;letter-spacing:-.01em}
+.dock-app:active .sq{transform:scale(.88);filter:brightness(.9)}
+.dock-app[aria-current="page"]::after{content:"";position:absolute;bottom:2px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--label)}
+.dock-app:focus-visible{outline-offset:0}
 
 /* ---------- Hojas (sheets) al estilo iOS ---------- */
 body.sheet-open{overflow:hidden}
 body.sheet-open .shell{transform:translateY(calc(8px + var(--safe-t))) scale(.93);border-radius:22px;overflow:hidden;filter:brightness(.82) saturate(.9)}
-body.sheet-open .dock{transform:translateY(130%);opacity:0}
+body.sheet-open .dock{transform:translateY(140%);opacity:0}
 .layer{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
 .scrim{position:absolute;inset:0;background:var(--scrim);opacity:0;transition:opacity var(--dur) var(--ease)}
 .layer.in .scrim{opacity:1}
@@ -250,7 +252,7 @@ body.sheet-open .dock{transform:translateY(130%);opacity:0}
 .sheet-bar .bar-btn.end{justify-self:end;font-weight:600}
 .sheet-bar .bar-btn:disabled{color:var(--label-3);cursor:default}
 .sheet-body{overflow-y:auto;overscroll-behavior:contain;padding:6px 16px calc(24px + var(--safe-b))}
-.sheet-body .group{background:var(--glass);border:.5px solid var(--glass-edge)}
+.sheet-body .group{background:var(--glass);border:1px solid var(--glass-edge)}
 .sheet-body .group-h{margin-left:16px}
 
 /* Filas de formulario iOS */
@@ -351,7 +353,7 @@ body.sheet-open .dock{transform:translateY(130%);opacity:0}
 @media (hover:hover){
   button.cell:hover,.row-main:hover,.opt:hover{background:var(--fill)}
   .chip:not([aria-pressed="true"]):hover{background:var(--glass-strong)}
-  .tab:not([aria-selected="true"]):hover{color:var(--label)}
+  .dock-app:hover .sq{transform:translateY(-4px) scale(1.06)}
 }
 @media (min-width:420px){
   .balance .cells3 b{font-size:21px}
