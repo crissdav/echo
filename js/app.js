@@ -380,6 +380,7 @@ const UI = {
         <div class="stat"><small><i style="background:var(--bad)"></i>Gastado</small><strong>${money(exp)}</strong></div>
         <div class="stat"><small><i style="background:var(--info)"></i>Disponible</small><strong style="color:${available<0?"var(--bad)":"inherit"}">${money(available)}</strong></div>
       </section>
+      <div class="fin-grid">
       <section class="panel">
         <h3>¿En qué gasté? <small>${catList.length ? money(exp) : ""}</small></h3>
         ${catList.length ? catList.map(([c,v],i) => `
@@ -398,7 +399,8 @@ const UI = {
               <span class="amt" style="color:${T.color}">${T.sign>0?"+":"−"}${money(x.amount)}</span>
             </button>`; }).join("")}`).join("")
           : `<div class="empty" style="border:0;padding:28px 10px"><div class="big">🧾</div><b>Sin movimientos</b>Toca + para registrar un gasto, ingreso o ahorro.</div>`}
-      </section>`;
+      </section>
+      </div>`;
     document.querySelectorAll("[data-m]").forEach(b => b.onclick = () => {
       const d = new Date(y, mo-1 + Number(b.dataset.m), 1); S.month = `${d.getFullYear()}-${pad(d.getMonth()+1)}`; UI.renderFinance();
     });

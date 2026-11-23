@@ -7,7 +7,7 @@ HTML + CSS + JS puro, sin compilación. Login y base de datos con **Supabase**. 
 | Archivo | Qué es |
 |---|---|
 | `index.html` | Estructura HTML |
-| `css/styles.css` | Estilos (tema oscuro/claro, diseño responsive) |
+| `css/styles.css` | Estilos mobile-first (celular base; tablet ≥768px, escritorio ≥1024px; tema oscuro/claro) |
 | `js/config.js` | URL y clave pública de Supabase, moneda |
 | `js/app.js` | Lógica: login, tareas, finanzas |
 | `img/favicon.svg` | Ícono |
