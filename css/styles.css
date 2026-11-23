@@ -217,15 +217,17 @@ button.cell:active,.row-main:active{background:var(--fill)}
 .amt.in{color:var(--green)} .amt.out{color:var(--label)} .amt.save{color:var(--tint)} .amt.wd{color:var(--orange)}
 .mov-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ---------- Dock de iOS ---------- */
-.dock{position:fixed;z-index:30;left:0;right:0;bottom:calc(10px + var(--safe-b));margin:0 auto;width:min(400px,calc(100% - 20px));height:92px;padding:0 16px;border-radius:34px;display:flex;align-items:center;justify-content:space-around;transition:transform var(--dur) var(--ease),opacity .3s}
-.dock-app{position:relative;display:grid;place-items:center;width:64px;height:76px;border-radius:18px;touch-action:manipulation}
-.sq{width:60px;height:60px;border-radius:14px;display:grid;place-items:center;color:#eaffff;background:var(--sq);transition:transform .25s var(--ease),filter .2s;box-shadow:0 4px 10px rgba(22,38,46,.18)}
-.sq svg{width:30px;height:30px}
-.sq.letter{font-size:26px;font-weight:600;letter-spacing:-.01em}
-.dock-app:active .sq{transform:scale(.88);filter:brightness(.9)}
-.dock-app[aria-current="page"]::after{content:"";position:absolute;bottom:2px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--label)}
-.dock-app:focus-visible{outline-offset:0}
+/* ---------- Navegación flotante (cápsula) ---------- */
+.dock{position:fixed;z-index:30;left:0;right:0;bottom:calc(12px + var(--safe-b));margin:0 auto;width:min(440px,calc(100% - 24px));height:64px;padding:5px;border-radius:999px;display:flex;align-items:center;gap:4px;transition:transform var(--dur) var(--ease),opacity .3s}
+.nav-item{flex:none;height:52px;min-width:52px;padding:0;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:0;background:var(--fill);color:var(--label);font-size:15px;font-weight:600;transition:padding .45s var(--ease),gap .45s var(--ease),background-color .25s}
+.nav-item svg{width:22px;height:22px;flex:none}
+.nav-item .lbl{display:inline-block;max-width:0;overflow:hidden;opacity:0;white-space:nowrap;transition:max-width .45s var(--ease),opacity .25s}
+.nav-item[aria-current="page"]{padding:0 14px 0 12px;gap:6px;background:var(--fill-2)}
+.nav-item[aria-current="page"] .lbl{max-width:120px;opacity:1}
+.nav-item:active{transform:scale(.94)}
+.nav-add{flex:1;min-width:52px;max-width:150px;height:52px;margin-left:auto;border-radius:999px;display:grid;place-items:center;background:var(--tint);color:var(--on-tint);box-shadow:var(--shadow);transition:transform .2s var(--ease)}
+.nav-add svg{width:28px;height:28px}
+.nav-add:active{transform:scale(.95)}
 
 /* ---------- Hojas (sheets) al estilo iOS ---------- */
 body.sheet-open{overflow:hidden}
@@ -342,7 +344,6 @@ body.sheet-open .dock{transform:translateY(140%);opacity:0}
 .msg svg{flex:none;width:18px;height:18px;margin-top:1px}
 .msg.err{color:var(--red)} .msg.ok{color:var(--green)}
 .msg span{color:var(--label)}
-.demo-pill{display:inline-block;margin-top:10px;padding:4px 10px;border-radius:99px;font-size:14px;font-weight:600;color:var(--orange);background:color-mix(in srgb,var(--orange) 16%,transparent)}
 .loader{position:relative;z-index:1;min-height:100dvh;display:grid;place-items:center;color:var(--label-2)}
 .spinner{width:28px;height:28px;border-radius:50%;border:3px solid var(--fill-2);border-top-color:var(--tint);animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -353,7 +354,15 @@ body.sheet-open .dock{transform:translateY(140%);opacity:0}
 @media (hover:hover){
   button.cell:hover,.row-main:hover,.opt:hover{background:var(--fill)}
   .chip:not([aria-pressed="true"]):hover{background:var(--glass-strong)}
-  .dock-app:hover .sq{transform:translateY(-4px) scale(1.06)}
+  .nav-item:not([aria-current="page"]):hover{background:var(--fill-2)}
+  .nav-add:hover{filter:brightness(1.08)}
+}
+@media (min-width:370px){
+  .dock{height:72px;padding:6px;gap:6px}
+  .nav-item{height:58px;min-width:58px;font-size:16px}
+  .nav-item svg{width:24px;height:24px}
+  .nav-item[aria-current="page"]{padding:0 18px 0 16px;gap:8px}
+  .nav-add{min-width:58px;height:58px}
 }
 @media (min-width:420px){
   .balance .cells3 b{font-size:21px}

@@ -51,6 +51,9 @@ const I = {
   trash: sv('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3"/>', 2),
   party: sv('<path d="M4 20l5-14 9 9z"/><path d="M14 4l.01 0M19 9l.01 0M17 3l-1 2M21 7l-2 1"/>', 2),
   doc:   sv('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h4"/>', 2),
+  cal: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2.5a1 1 0 011 1V5h8V3.5a1 1 0 112 0V5h.5A3.5 3.5 0 0122 8.5v10a3.5 3.5 0 01-3.5 3.5h-13A3.5 3.5 0 012 18.5v-10A3.5 3.5 0 015.5 5H6V3.5a1 1 0 011-1zM4 10.5v8A1.5 1.5 0 005.5 20h13a1.5 1.5 0 001.5-1.5v-8z"/><circle cx="8" cy="13.5" r="1.2"/><circle cx="12" cy="13.5" r="1.2"/><circle cx="16" cy="13.5" r="1.2"/><circle cx="8" cy="17" r="1.2"/><circle cx="12" cy="17" r="1.2"/></svg>',
+  coins: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 5h14a3 3 0 013 3v8a3 3 0 01-3 3H5a3 3 0 01-3-3V8a3 3 0 013-3zm7 3.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z"/></svg>',
+  person: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 4a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm0 9c-2.6 0-4.8 1.2-5.9 3a8 8 0 0011.8 0c-1.1-1.8-3.3-3-5.9-3z"/></svg>',
   wallet:sv('<path d="M3 7a2 2 0 012-2h13v4"/><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M17 13.5h.01"/>', 2),
 };
 const CATS = {
@@ -102,7 +105,7 @@ const LocalBackend = {
     localStorage.setItem("pd_session", email);
     return { email, logged:true };
   },
-  async reset(){ throw new Error("En modo demo no se envían correos. Configura Supabase para recuperar contraseñas."); },
+  async reset(){ throw new Error("No hay servidor configurado para enviar correos. Configura Supabase para recuperar contraseñas."); },
   async signOut(){ localStorage.removeItem("pd_session"); },
   _key(t){ return `pd_${t}_${this.session().email}`; },
   _read(t){ try{ return JSON.parse(localStorage.getItem(this._key(t))||"[]"); }catch{ return []; } },
@@ -268,7 +271,6 @@ const UI = {
       <div class="auth-head">
         <div class="app-icon">${I.logo.replace('stroke="currentColor"','stroke="#eaffff"')}</div>
         <h1>${T[0]}</h1><p>${T[1]}</p>
-        ${DEMO ? '<span class="demo-pill">Modo demo · datos solo en este navegador</span>' : ""}
       </div>
       ${msg ? `<div class="msg glass ${msg.ok?"ok":"err"}" role="${msg.ok?"status":"alert"}">${msg.ok?I.ok:I.alert}<span>${esc(msg.t)}</span></div>` : ""}
       <div class="group glass">
@@ -319,11 +321,11 @@ const UI = {
         <main id="main"></main>
       </div>
     </div>
-    <nav class="dock glass" aria-label="Dock">
-      <button class="dock-app" data-view="tareas" aria-label="Tareas" ${S.view==="tareas"?'aria-current="page"':""}><span class="sq" style="--sq:var(--p2)">${I.tasks}</span></button>
-      <button class="dock-app" data-view="finanzas" aria-label="Finanzas" ${S.view==="finanzas"?'aria-current="page"':""}><span class="sq" style="--sq:var(--p4)">${I.money}</span></button>
-      <button class="dock-app" id="add" aria-label="${S.view==="tareas"?"Nueva tarea":"Nuevo movimiento"} (N)"><span class="sq" style="--sq:var(--p1)">${I.plus}</span></button>
-      <button class="dock-app" id="account" aria-label="Cuenta: ${esc(email)}"><span class="sq letter" style="--sq:var(--p6)">${esc((email[0]||"?").toUpperCase())}</span></button>
+    <nav class="dock glass" aria-label="Navegación">
+      <button class="nav-item" data-view="tareas" aria-label="Tareas" ${S.view==="tareas"?'aria-current="page"':""}>${I.cal}<span class="lbl">Tareas</span></button>
+      <button class="nav-item" data-view="finanzas" aria-label="Finanzas" ${S.view==="finanzas"?'aria-current="page"':""}>${I.coins}<span class="lbl">Finanzas</span></button>
+      <button class="nav-item" id="account" aria-label="Cuenta: ${esc(email)}">${I.person}</button>
+      <button class="nav-add" id="add" aria-label="${S.view==="tareas"?"Nueva tarea":"Nuevo movimiento"} (N)">${I.plus}</button>
     </nav>`;
     $$("[data-view]").forEach(b => b.onclick = () => {
       if(S.view === b.dataset.view) return;
@@ -338,7 +340,7 @@ const UI = {
   accountSheet(email){
     const layer = Sheet.open(`${bar("Cuenta", { left:"Listo" })}
       <div class="sheet-body">
-        <ul class="group"><li><div class="cell"><span class="avatar glass">${esc((email[0]||"?").toUpperCase())}</span><div class="cell-main"><div class="l1">${esc(email)}</div><div class="l2">${DEMO ? "Modo demo · datos en este navegador" : "Sesión iniciada"}</div></div></div></li></ul>
+        <ul class="group"><li><div class="cell"><span class="avatar glass">${esc((email[0]||"?").toUpperCase())}</span><div class="cell-main"><div class="l1">${esc(email)}</div><div class="l2">Sesión iniciada</div></div></div></li></ul>
         <ul class="group" style="margin-top:22px"><li><button class="opt danger" id="logout">Cerrar sesión</button></li></ul>
       </div>`, { label:"Cuenta" });
     $("[data-close]", layer).onclick = () => Sheet.close();

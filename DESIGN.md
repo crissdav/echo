@@ -27,7 +27,7 @@ Paleta elegida por el usuario, una escala de gris azulado:
 ## Componentes
 - **Hoja (sheet)**: sube desde abajo con curva de resorte de iOS, esquinas de 38px, asa para arrastrar y cerrar, barra con Cancelar / título / acción. Al abrirse, la app de fondo se encoge y oscurece (efecto tarjeta de iOS). En pantallas ≥768px es una hoja centrada.
 - **Alerta**: cuadro centrado de vidrio, título, mensaje y botones en fila; acción destructiva en rojo.
-- **Dock de iOS**: barra de vidrio redondeada abajo con cuatro íconos tipo app (squircles de 60px, sin texto): Tareas, Finanzas, + (nuevo) y Cuenta (inicial del correo). La sección activa lleva un punto debajo, como en el Dock.
+- **Navegación flotante**: cápsula de vidrio abajo. La sección activa se expande como píldora con ícono y nombre (Tareas o Finanzas); las demás y Cuenta son círculos con ícono. A la derecha, un botón + grande en píldora con el tinte. Mobile-first: tamaño compacto bajo 370px.
 - **Aviso (toast)**: cápsula de vidrio que baja desde arriba.
 - **Control segmentado** de iOS para tipo de movimiento y prioridad.
 
