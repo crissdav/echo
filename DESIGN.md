@@ -9,7 +9,7 @@ Celular en la mano, a cualquier hora del día: el tema sigue al sistema (claro d
 iOS con materiales de vidrio. Un fondo de color difuso ("wallpaper") vive detrás de todo y los paneles son vidrio esmerilado que lo deja ver. Las manchas del fondo se reordenan entre Tareas y Finanzas dentro de la misma escala gris azulado.
 
 ## Tipografía
-Pila del sistema de Apple (`-apple-system`, SF Pro); en Windows/Android cae a la fuente del sistema. Escala: título grande 34/700, título de hoja 17/600, cuerpo 17/400, secundario 15, nota 13. Números siempre tabulares.
+Pila del sistema de Apple (`-apple-system`, SF Pro); en Windows/Android cae a la fuente del sistema. Escala aumentada a pedido del usuario: título grande 38/700, título de hoja 19/600, cuerpo 19/400, secundario 17, nota 15. Números siempre tabulares.
 
 ## Color
 Paleta elegida por el usuario, una escala de gris azulado:
@@ -21,7 +21,7 @@ Paleta elegida por el usuario, una escala de gris azulado:
 - Los colores de estado conservan significado: hecha/ingreso verde, atrasada/gasto destructivo rojo, postergada y prioridad media naranja.
 
 ## Materiales
-- Vidrio: `backdrop-filter: blur(28px) saturate(180%)`, relleno translúcido, borde de 0.5px con brillo superior y sombra suave con desplazamiento.
+- Vidrio: `backdrop-filter: blur(28px) saturate(180%)`, relleno translúcido, borde de 0.5px y sombra suave neutra. Sin iluminados: ni brillos internos, ni halos de color en botones, ni degradados brillantes (pedido del usuario).
 - Listas: grupos insertados (inset grouped) con separadores finos, no tarjetas sueltas.
 
 ## Componentes
