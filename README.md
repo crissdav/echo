@@ -6,17 +6,21 @@ HTML + CSS + JS puro, sin compilación. Login y base de datos con **Supabase**. 
 ## Archivos
 | Archivo | Qué es |
 |---|---|
-| `index.html` | Toda la app (estilos + lógica) |
+| `index.html` | Estructura HTML |
+| `css/styles.css` | Estilos (tema oscuro/claro, diseño responsive) |
+| `js/config.js` | URL y clave pública de Supabase, moneda |
+| `js/app.js` | Lógica: login, tareas, finanzas |
+| `img/favicon.svg` | Ícono |
 | `supabase.sql` | Tablas + seguridad por usuario (RLS) |
 
 ## 1. Probar en modo demo
-Abre `index.html` en el navegador. Sin claves de Supabase funciona en **modo demo**: crea una cuenta local y todo se guarda en ese navegador.
+Abre `index.html` en el navegador. Si dejas vacías las claves de `js/config.js`, funciona en **modo demo**: crea una cuenta local y todo se guarda en ese navegador.
 
 ## 2. Conectar Supabase (login real + datos en la nube)
 1. Crea un proyecto en https://supabase.com
 2. **SQL Editor → New query** → pega `supabase.sql` → **Run**
 3. **Project Settings → API**: copia *Project URL* y *anon public key*
-4. En `index.html`, arriba del todo:
+4. En `js/config.js`:
    ```js
    window.APP_CONFIG = {
      SUPABASE_URL: "https://xxxx.supabase.co",
